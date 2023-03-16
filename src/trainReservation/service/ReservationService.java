@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import trainReservation.dto.GetReservationDto;
 import trainReservation.dto.GetTrainListDto;
 import trainReservation.dto.PostReservationDto;
 import trainReservation.entity.Cost;
@@ -15,8 +16,6 @@ import trainReservation.entity.Train;
 
 // Service class(계층)
 // 실제 비지니스 로직 담당
-
-
 public class ReservationService {
 	
 	private static List<Train> trains = new ArrayList<>();
@@ -43,7 +42,7 @@ public class ReservationService {
 				String stopStationName = stopStation.getStationName();
 				
 				if (!dto.isEqualDepartureStation(stopStationName)) continue;
-				
+				if(stopStation.getDepartureTime().equals("")) continue;
 				LocalTime stationDepartureTime = LocalTime.parse(stopStation.getDepartureTime(), timeFormatter);
 				
 				if (stationDepartureTime.isBefore(departureTime)) break;
@@ -160,6 +159,23 @@ public class ReservationService {
 
 		return reservationInfo;
 		
+	}
+	
+	public ReservationInfo getReservation(GetReservationDto dto) {
+		ReservationInfo reservationInfo = null;
+		String reservationNumber = dto.getReservationNumber();
+		
+		for(ReservationInfo item: reservations) {
+			
+			boolean isEqualReservationNumber = reservationNumber.equals(item.getReservationNumber());
+			
+			if(!isEqualReservationNumber) continue;
+			
+			reservationInfo = item;
+			break;
+		}
+		
+		return reservationInfo;
 	}
 	
 	private static void initData() {
