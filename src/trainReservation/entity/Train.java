@@ -73,6 +73,7 @@ public String toString() {
 			+ departureTime + ", arrivalStation=" + arrivalStation + ", arrivalTime=" + arrivalTime + ", takeMinute="
 			+ takeMinute + ", type=" + type + ", stopStations=" + stopStations + ", seats=" + seats + "]";
 }
+
  
  
 

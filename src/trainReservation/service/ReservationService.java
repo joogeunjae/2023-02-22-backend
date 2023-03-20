@@ -24,6 +24,7 @@ public class ReservationService {
 
 	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
+	//생성자로 역에 대한 정보를 넣는다.
 	public ReservationService() {
 		initData();
 	}
@@ -31,41 +32,57 @@ public class ReservationService {
 	public List<Train> getPossibleTrainList(GetTrainListDto dto, LocalTime departureTime) {
 		
 		List<Train> possibleTrains = new ArrayList<>();
+		//java stream 기능의 foreach문 그리고 람다식
+		/*possibleTrains.stream().forEach(변수명 -> {
+			실행할 코드
+		});*/
 		
+		//확장 for 문
+		//기차 하나만 꺼냄
 		for (Train train: trains) {
 			
 			List<StopStation> stopStations = train.getStopStations();
 			int sameStationIndex = -1;
 			
 			for (int stopStationIndex = 0; stopStationIndex < stopStations.size(); stopStationIndex++) {
+				//위의 sameStationIndex값으로 도착역 데이터에서 해당 index순서를 가져옴
 				StopStation stopStation = stopStations.get(stopStationIndex);
 				String stopStationName = stopStation.getStationName();
 				
+				//도착 역이 같지 않으면 continue
 				if (!dto.isEqualDepartureStation(stopStationName)) continue;
+				//도착역 데이터의 도착시간이 공백이면 continue
 				if(stopStation.getDepartureTime().equals("")) continue;
+				//도착역의 시간을 LocalTime으로 변환
 				LocalTime stationDepartureTime = LocalTime.parse(stopStation.getDepartureTime(), timeFormatter);
 				
+				//함수명 그대로 읽으면 도착역의 도착시간이 조회한 시간보다 이전이면 break
 				if (stationDepartureTime.isBefore(departureTime)) break;
 				
+				//위의 모든 경우의 수에 해당하지 않으면 sameStationIndex에 도착역 데이터 index를 할당하고 break
 				sameStationIndex = stopStationIndex;
 				break;
 			}
-			
+		
+			//위의 모든 경우의 수가 맞지않은데 -1일 경우 continue
 			if (sameStationIndex == -1) continue;
 			
 			boolean isPossible = false;
 			
+			//출발역 기차의 좌석을 알아보는 로직
 			for (int stopStationIndex = 0; stopStationIndex < stopStations.size(); stopStationIndex++) {
+				//도착역의 index에 해당하는 기차 이름을 가져옴
 				String stationName = stopStations.get(stopStationIndex).getStationName();
 				
+				//출발역 이름과 도착역 이름이 같지 않으면 continue
 				if (!dto.isEqualArrivalStation(stationName)) continue;
-				
+				//도착역 index가 같은역 index보다 작겨나 같으면 break
 				if (stopStationIndex <= sameStationIndex) break;
 				
 				isPossible = true;
 				break;
-			}
-			
+			}  
+			//좌석 알아보는 코드
 			if (!isPossible) continue;
 			
 			List<Seat> seats = train.getSeats();

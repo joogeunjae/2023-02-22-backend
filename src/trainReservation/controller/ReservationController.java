@@ -14,7 +14,7 @@ import trainReservation.service.ReservationService;
 //Controller class (계층)
 //사용자로부터 입력받는 기능 / 입력받은 데이터를 검증 기능 / 비즈니스 로직의 결과를 반환
 public class ReservationController {
-	
+																		//H = 시간 m = 분
 	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 	
 	private ReservationService reservationService;
@@ -37,7 +37,8 @@ public class ReservationController {
 				System.out.println("모두 입력하세요.");
 				continue;
 			}
-			
+											//20230318, 2023-03-18, 23-08-18, 2023-03-18 07:18:15
+																			//yyyy-MM-dd HH:mm:ss
 			try {
 				departureTime = LocalTime.parse(getTrainListDto.getDepartureTime(), timeFormatter);
 			} catch(Exception exception) {
@@ -54,10 +55,11 @@ public class ReservationController {
 				System.out.println("출발역과 도착역이 같습니다.");
 				continue;
 			}
-			
+			//원시형(프리미티브 타입) 그냥 Stack에 쌓임
+			//참조형(레퍼런스 타입) 각각 주소를 가지고 있음
 			List<Train> possibleTrains = reservationService.getPossibleTrainList(getTrainListDto, departureTime);
 			
-			System.out.println(possibleTrains.toString());
+			System.out.println(possibleTrains);
 			
 			postReservation();
 			break;

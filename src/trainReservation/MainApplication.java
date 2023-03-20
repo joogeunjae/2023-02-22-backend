@@ -14,7 +14,6 @@ import trainReservation.entity.StopStation;
 import trainReservation.entity.Train;
 import trainReservation.service.ReservationService;
 
-
 public class MainApplication {
 	
 		private static ReservationController reservationController = new ReservationController();
@@ -25,6 +24,7 @@ public class MainApplication {
 				Scanner scanner = new Scanner(System.in);
 				String endPoint = scanner.nextLine();
 				
+				//POST GET UPDATE DELETE = RestAPI
 				if(endPoint.equals("POST / reservation")) {
 				reservationController.reservation();
 				}
